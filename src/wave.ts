@@ -1,5 +1,8 @@
-// Referenced from
-// https://web.archive.org/web/20141101112743/http:/www.sonicspot.com/guide/wavefiles.html#cue
+// Referenced from:
+// - https://web.archive.org/web/20141101112743/http:/www.sonicspot.com/guide/wavefiles.html
+// - https://web.archive.org/web/20250811161747/https://www.recordingblogs.com/wiki/list-chunk-of-a-wave-file
+//   - Original link still works as of Sept. 2025: https://www.recordingblogs.com/wiki/list-chunk-of-a-wave-file
+
 
 const textDecoder = new TextDecoder();
 const textEncoder = new TextEncoder();
@@ -277,8 +280,6 @@ export class SampleChunk implements Chunk {
 	static unpack(from: DataView, tag: number) {
 		const sampleLoopCount = from.getUint32(28, true);
 		const samplerDataSize = from.getUint32(32, true);
-
-		console.log(samplerDataSize);
 
 		let samplerData: Uint8Array | undefined;
 		if (samplerDataSize) {
