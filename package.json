@@ -1,19 +1,18 @@
 {
 	"name": "wave-js",
 	"version": "0.9.0",
-	"description": "A low-level library for reading .wav files.",
-	"main": "index.js",
+	"author": "Koerismo",
+	"description": "A low-level Typescript library for working with the RIFF/WAVE format.",
+	"keywords": ["wave", "riff", "io"],
+	"license": "GPL-3.0-only",
+	"type": "module",
+	"main": "src/wave.ts",
 	"scripts": {
 		"test": "bun test"
 	},
-	"keywords": [],
-	"author": "Koerismo",
-	"license": "GPL-3.0-only",
-	"packageManager": "pnpm@10.15.1",
-	"dependencies": {
+	"devDependencies": {
+		"@types/node": "^24.3.1",
 		"@types/mocha": "^10.0.10"
 	},
-	"devDependencies": {
-		"@types/node": "^24.3.1"
-	}
+	"packageManager": "pnpm@10.15.1"
 }
