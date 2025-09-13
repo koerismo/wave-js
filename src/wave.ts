@@ -435,7 +435,7 @@ export class ListChunk implements Chunk {
 
 export class DataChunk implements Chunk {
 	tag = ChunkTagsBE.DATA;
-	
+
 	constructor(
 		public data: Uint8Array
 	) {}
@@ -449,6 +449,16 @@ export class DataChunk implements Chunk {
 			.set(this.data, 0);
 	}
 
+	reinterpret(bits: number): Uint8Array | Int16Array | Int32Array | never {
+		switch (bits) {
+			case 8:		return this.data;
+			case 16:	return new Int16Array(this.data.buffer, this.data.byteOffset, Math.floor(this.data.byteLength / 2));
+			case 32:	return new Int32Array(this.data.buffer, this.data.byteOffset, Math.floor(this.data.byteLength / 4));
+			default:
+				throw Error(`Cannot reinterpret to bit depth ${bits}!`);
+		}
+	}
+
 	static unpack(from: DataView, tag: number): DataChunk {
 		return new DataChunk(
 			new Uint8Array(from.buffer, from.byteOffset, from.byteLength)
@@ -457,13 +467,22 @@ export class DataChunk implements Chunk {
 }
 
 export class Wave {
-	private chunkCache: Record<number, Chunk | undefined> = {};
+	cached_fmt?: FormatChunk;
+	cached_data?: DataChunk;
 
 	constructor(
 		public chunks: Chunk[] = [],
 	) {
-		this.chunkCache[ChunkTagsBE.FMT] = this.getChunk(ChunkTagsBE.FMT);
-		this.chunkCache[ChunkTagsBE.DATA] = this.getChunk(ChunkTagsBE.DATA);
+		this.updateCache();
+	}
+
+	/**
+	 * Updates the internal cache used by the ease-of-access methods.
+	 * This only needs to be called when replacing the format or data chunks!
+	*/
+	updateCache() {
+		this.cached_fmt = this.getChunk(ChunkTagsBE.FMT);
+		this.cached_data = this.getChunk(ChunkTagsBE.DATA);
 	}
 
 	encode(): ArrayBuffer {
@@ -498,9 +517,18 @@ export class Wave {
 		return buffer;
 	}
 
-	getChunk(tag: number): Chunk | undefined {
+	getLengthSamples() {
+		const fmt = this.cached_fmt!;
+		return this.cached_data!.data.length / fmt.channelCount / (fmt.sigBitsPerSample / 8);
+	}
+
+	getLengthSeconds() {
+		return this.getLengthSamples() / this.cached_fmt!.sampleRate;
+	}
+
+	getChunk<T extends Chunk>(tag: number): T | undefined {
 		for (let i=0; i<this.chunks.length; i++) {
-			if (this.chunks[i].tag === tag) return this.chunks[i];
+			if (this.chunks[i].tag === tag) return this.chunks[i] as T;
 		}
 		return;
 	}
