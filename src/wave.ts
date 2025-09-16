@@ -238,8 +238,8 @@ export class SampleChunk implements Chunk {
 
 	constructor(
 		public samplePeriod: number,
-		public samplerData: Uint8Array | undefined,
 		public sampleLoops: SampleLoop[],
+		public samplerData: Uint8Array | undefined,
 		public manufacturer: number = 0,
 		public product: number = 0,
 		public midiUnityNote: number = 0,
@@ -297,8 +297,8 @@ export class SampleChunk implements Chunk {
 
 		return new SampleChunk(
 			from.getUint32(8, true),	// samplePeriod
-			samplerData,				// samplerData
 			sampleLoops,				// sampleLoops
+			samplerData,				// samplerData
 			from.getUint32(0, true),	// manufacturer
 			from.getUint32(4, true),	// product
 			from.getUint32(12, true),	// unity note

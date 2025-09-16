@@ -1,6 +1,6 @@
 {
 	"name": "wave-js",
-	"version": "0.9.0",
+	"version": "0.9.1",
 	"author": "Koerismo",
 	"description": "A low-level Typescript library for working with the RIFF/WAVE format.",
 	"keywords": ["wave", "riff", "io"],
@@ -8,7 +8,8 @@
 	"type": "module",
 	"main": "src/wave.ts",
 	"scripts": {
-		"test": "bun test"
+		"test": "bun test",
+		"build": "tsc"
 	},
 	"devDependencies": {
 		"@types/node": "^24.3.1",
